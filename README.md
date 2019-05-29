@@ -1,0 +1,2 @@
+# promise-lib
+promise methods
