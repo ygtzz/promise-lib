@@ -1,33 +1,10 @@
 
-
-
-Promise.concurrency = function(promiseGens,concurrency){
-    let concurrencyPromises = [];
-    while(concurrency--){
-        concurrencyPromises.push(recur(promiseGens));
-    }
-
-    return Promise.all(concurrencyPromises);
-
-    function recur(promiseGens){
-        let first = promiseGens.shift();
-        first().then(function(data){
-            return finishHandle();
-        }).catch(function(err){
-            return allowFail ? finishHandle() : err; 
-        })
-    }
-
-    function finishHandle(promiseGens){
-        return promiseGens.length > 0 ? recur(promiseGens) : 'finish';
-    }
-}
-
-
-Promise.serial = function(promiseGens){
-    let seq = Promise.resolove();
+Promise.serial = function(promiseGens,allowFail){
+    let seq = Promise.resolve();
     promiseGens.forEach(function(item){
-        seq = seq.then(item);
+        seq = allowFail ? seq.then(item).catch(function(err){
+            return err;
+        }) : seq.then(item);
     });
 
     return seq;
@@ -55,3 +32,27 @@ Promise.parallel = function(promiseGens){
     return allPromise;
 }
 
+Promise.concurrency = function(promiseGens,concurrency,allowFail){
+    let promiseGenCopys = [].concat(promiseGens);
+    let concurrencyPromises = [];
+    while(concurrency--){
+        concurrencyPromises.push(recur(promiseGenCopys));
+    }
+
+    return Promise.all(concurrencyPromises);
+
+    // return Promise.parallel(concurrencyPromises);
+
+    function recur(promiseGens){
+        let first = promiseGens.shift();
+        return first().then(function(data){
+            return finishHandle(promiseGens);
+        }).catch(function(err){
+            return allowFail ? finishHandle(promiseGens) : err; 
+        })
+    }
+
+    function finishHandle(promiseGens){
+        return promiseGens.length > 0 ? recur(promiseGens) : 'finish';
+    }
+}

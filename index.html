@@ -8,5 +8,88 @@
 </head>
 <body>
     <script src="./index.js"></script>
+    <script>
+        // 异步函数a
+        var a = function () {
+            return new Promise(function (resolve, reject) {
+                setTimeout(function () {
+                    console.log('resolve a');
+                    resolve('a');
+                }, 500)
+            })
+        }
+
+        // 异步函数b
+        var b = function (data) {
+            return new Promise(function (resolve, reject) {
+                setTimeout(() => {  
+                    console.log('resolve b');
+                    resolve(data + 'b');
+                },500)
+            })
+        }
+
+        // 异步函数c
+        var c = function (data) {
+            return new Promise(function (resolve, reject) {
+                setTimeout(function () {
+                    console.log('resolve c');
+                    reject(data + 'c');
+                }, 500)
+            })
+        }
+
+        // 异步函数c
+        var d = function (data) {
+            return new Promise(function (resolve, reject) {
+                setTimeout(function () {
+                    console.log('resolve d');
+                    reject(data + 'd');
+                }, 500)
+            })
+        }
+
+        // 异步函数c
+        var e = function (data) {
+            return new Promise(function (resolve, reject) {
+                setTimeout(function () {
+                    console.log('resolve e');
+                    reject(data + 'e');
+                }, 500)
+            })
+        }
+
+        // 异步函数c
+        var f = function (data) {
+            return new Promise(function (resolve, reject) {
+                setTimeout(function () {
+                    console.log('resolve f');
+                    reject(data + 'f');
+                }, 500)
+            })
+        }
+
+        //串行测试
+        Promise.serial([a,b,c,d,e,f],true).then(function(data){
+            console.log(data);
+        }).catch(function(err){
+            console.log('catch',err);
+        });
+
+        //并行测试
+        // Promise.parallel([a,b,c,d,e,f]).then(function(data){
+        //     console.log(data);
+        // }).catch(function(err){
+        //     console.log(err);
+        // });
+
+        //并发测试
+        // Promise.concurrency([a,b,c,d,e,f],2,true).then(function(data){
+        //     console.log(data);
+        // }).catch(function(err){
+        //     console.log(err);
+        // })
+
+    </script>
 </body>
 </html>
