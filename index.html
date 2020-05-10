@@ -23,8 +23,8 @@
         var b = function (data) {
             return new Promise(function (resolve, reject) {
                 setTimeout(() => {  
-                    console.log('resolve b');
-                    resolve(data + 'b');
+                    console.log('resolve b',data);
+                    resolve(data||'resolve'+ 'b');
                 },500)
             })
         }
@@ -33,8 +33,8 @@
         var c = function (data) {
             return new Promise(function (resolve, reject) {
                 setTimeout(function () {
-                    console.log('resolve c');
-                    reject(data + 'c');
+                    console.log('resolve c',data);
+                    reject(data||'reject' + 'c');
                 }, 500)
             })
         }
@@ -43,8 +43,8 @@
         var d = function (data) {
             return new Promise(function (resolve, reject) {
                 setTimeout(function () {
-                    console.log('resolve d');
-                    reject(data + 'd');
+                    console.log('resolve d',data);
+                    reject(data||'reject' + 'd');
                 }, 500)
             })
         }
@@ -53,8 +53,8 @@
         var e = function (data) {
             return new Promise(function (resolve, reject) {
                 setTimeout(function () {
-                    console.log('resolve e');
-                    reject(data + 'e');
+                    console.log('resolve e',data);
+                    reject(data||'reject' + 'e');
                 }, 500)
             })
         }
@@ -63,18 +63,18 @@
         var f = function (data) {
             return new Promise(function (resolve, reject) {
                 setTimeout(function () {
-                    console.log('resolve f');
-                    reject(data + 'f');
+                    console.log('resolve f',data);
+                    reject(data||'reject' + 'f');
                 }, 500)
             })
         }
 
         //串行测试
-        Promise.serial([a,b,c,d,e,f],true).then(function(data){
-            console.log(data);
-        }).catch(function(err){
-            console.log('catch',err);
-        });
+        // Promise.serial([a,b,c,d,e,f],true).then(function(data){
+        //     console.log(data);
+        // }).catch(function(err){
+        //     console.log('catch',err);
+        // });
 
         //并行测试
         // Promise.parallel([a,b,c,d,e,f]).then(function(data){
@@ -84,11 +84,11 @@
         // });
 
         //并发测试
-        // Promise.concurrency([a,b,c,d,e,f],2,true).then(function(data){
-        //     console.log(data);
-        // }).catch(function(err){
-        //     console.log(err);
-        // })
+        Promise.concurrency([a,b,c,d,e,f],2,true).then(function(data){
+            console.log(data);
+        }).catch(function(err){
+            console.log(err);
+        })
 
     </script>
 </body>

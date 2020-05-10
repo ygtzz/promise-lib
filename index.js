@@ -2,9 +2,7 @@
 Promise.serial = function(promiseGens,allowFail){
     let seq = Promise.resolve();
     promiseGens.forEach(function(item){
-        seq = allowFail ? seq.then(item).catch(function(err){
-            return err;
-        }) : seq.then(item);
+        seq = allowFail ? seq.then(item).catch(err => err) : seq.then(item);
     });
 
     return seq;
@@ -15,12 +13,9 @@ Promise.parallel = function(promiseGens){
     let allPromise = new Promise(function(resolve,reject){
         let results = [];
         promiseGens.forEach(function(item){
-            item().then(function(data){
-                results.push(data);
-            })
-            .catch(function(err){
-                results.push(err);
-            })
+            item()
+            .then(data => results.push(data))
+            .catch(err => results.push(err))
             .finally(function(){
                 if(results.length == promiseGens.length){
                     resolve(results);
@@ -35,24 +30,27 @@ Promise.parallel = function(promiseGens){
 Promise.concurrency = function(promiseGens,concurrency,allowFail){
     let promiseGenCopys = [].concat(promiseGens);
     let concurrencyPromises = [];
+    let res = [];
     while(concurrency--){
         concurrencyPromises.push(recur(promiseGenCopys));
     }
-
-    return Promise.all(concurrencyPromises);
+    
+    return Promise.all(concurrencyPromises).then(_ => res);
 
     // return Promise.parallel(concurrencyPromises);
 
     function recur(promiseGens){
         let first = promiseGens.shift();
         return first().then(function(data){
+            res.push(data);
             return finishHandle(promiseGens);
         }).catch(function(err){
+            res.push(err);
             return allowFail ? finishHandle(promiseGens) : err; 
         })
     }
 
     function finishHandle(promiseGens){
-        return promiseGens.length > 0 ? recur(promiseGens) : 'finish';
+        return promiseGens.length > 0 ? recur(promiseGens) : '';
     }
 }
