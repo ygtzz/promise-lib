@@ -40,17 +40,15 @@ Promise.concurrency = function(promiseGens,concurrency,allowFail){
     // return Promise.parallel(concurrencyPromises);
 
     function recur(promiseGens){
+        if(!promiseGens.length) return Promise.resolve();
+
         let first = promiseGens.shift();
         return first().then(function(data){
             res.push(data);
-            return finishHandle(promiseGens);
+            return recur(promiseGens);
         }).catch(function(err){
             res.push(err);
-            return allowFail ? finishHandle(promiseGens) : err; 
+            return allowFail ? recur(promiseGens) : err; 
         })
-    }
-
-    function finishHandle(promiseGens){
-        return promiseGens.length > 0 ? recur(promiseGens) : '';
     }
 }

@@ -23,8 +23,8 @@
         var b = function (data) {
             return new Promise(function (resolve, reject) {
                 setTimeout(() => {  
-                    console.log('resolve b',data);
-                    resolve(data||'resolve'+ 'b');
+                    console.log('reject b',data);
+                    reject(data||'reject'+ 'b');
                 },500)
             })
         }
@@ -34,7 +34,7 @@
             return new Promise(function (resolve, reject) {
                 setTimeout(function () {
                     console.log('resolve c',data);
-                    reject(data||'reject' + 'c');
+                    resolve(data||'reject' + 'c');
                 }, 500)
             })
         }
@@ -44,7 +44,7 @@
             return new Promise(function (resolve, reject) {
                 setTimeout(function () {
                     console.log('resolve d',data);
-                    reject(data||'reject' + 'd');
+                    resolve(data||'reject' + 'd');
                 }, 500)
             })
         }
@@ -53,7 +53,7 @@
         var e = function (data) {
             return new Promise(function (resolve, reject) {
                 setTimeout(function () {
-                    console.log('resolve e',data);
+                    console.log('reject e',data);
                     reject(data||'reject' + 'e');
                 }, 500)
             })
@@ -63,7 +63,7 @@
         var f = function (data) {
             return new Promise(function (resolve, reject) {
                 setTimeout(function () {
-                    console.log('resolve f',data);
+                    console.log('reject f',data);
                     reject(data||'reject' + 'f');
                 }, 500)
             })
